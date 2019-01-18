@@ -37,12 +37,17 @@ export default {
     } catch (err) {
       console.err(err)
     }
-    return { trends: trends }
+    // サーバサイドからbaseUrlをクライアントにも渡す
+    return {
+      trends: trends,
+      baseUrl: process.env.BASE_URL || ''
+    }
   },
   methods: {
     towa(keyword) {
+      console.log('[client]baseUrl: ', this.baseUrl)
       // this.$router.push(`/trends/candidates?keyword=${keyword}`)
-      location.href = `/trends/candidates?keyword=${keyword}`
+      location.href = `${this.baseUrl}/trends/candidates?keyword=${keyword}`
     }
   }
 }

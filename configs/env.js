@@ -10,7 +10,7 @@ const ENV = {
 }
 
 if (endpointEnv === 'api_gw') {
-  ENV.BASE_URL = `/${ENV.STAGE}/`
+  ENV.BASE_URL = `/${ENV.STAGE}`
 }
 
 // for serverless.yml
