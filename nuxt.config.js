@@ -1,47 +1,76 @@
-const pkg = require('./package')
+const { ENV } = require('./configs/env')
+
+const routerConfig = {
+  middleware: 'redirectAppRoot'
+}
+if (ENV.BASE_URL) {
+  routerConfig.base = ENV.BASE_URL
+}
 
 module.exports = {
   mode: 'universal',
 
-  /*
-  ** Headers of the page
-  */
-  head: {
-    title: pkg.name,
-    meta: [
-      { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: pkg.description }
-    ],
-    link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ]
+  srcDir: 'app/',
+
+  router: {
+    ...routerConfig
+  },
+
+  render: {
+    /**
+     * compression を通すと API Gateway がレスポンスを返せないので
+     * なにもしないミドルウェアを定義しておく
+     */
+    compressor: (req, res, next) => {
+      next()
+    }
   },
 
   /*
-  ** Customize the progress-bar color
-  */
+   ** Headers of the page
+   */
+  head: {
+    title: 'towa',
+    meta: [
+      { charset: 'utf-8' },
+      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      { hid: 'description', name: 'description', content: 'towa' }
+    ],
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
+  },
+  /*
+   ** Customize the progress bar color
+   */
   loading: { color: '#fff' },
+  /*
+   ** Global CSS
+   */
+  css: [],
 
   /*
-  ** Global CSS
-  */
-  css: [
-  ],
+   ** Plugins to load before mounting the App
+   */
+  plugins: [],
 
   /*
-  ** Plugins to load before mounting the App
-  */
-  plugins: [
-  ],
-
-  /*
-  ** Nuxt.js modules
-  */
+   ** Nuxt.js modules
+   */
   modules: [
     // Doc: https://github.com/nuxt-community/axios-module#usage
     '@nuxtjs/axios'
   ],
+  manifest: {
+    name: 'towa',
+    lang: 'ja',
+    short_name: 'npls',
+    title: 'towa',
+    'og:title': 'towa',
+    description: 'towa',
+    'og:description': 'towa',
+    theme_color: '#ffffff',
+    background_color: '#ffffff'
+  },
+
   /*
   ** Axios module configuration
   */
@@ -50,22 +79,12 @@ module.exports = {
   },
 
   /*
-  ** Build configuration
-  */
+   ** Build configuration
+   */
   build: {
     /*
-    ** You can extend webpack config here
-    */
-    extend(config, ctx) {
-      // Run ESLint on save
-      if (ctx.isDev && ctx.isClient) {
-        config.module.rules.push({
-          enforce: 'pre',
-          test: /\.(js|vue)$/,
-          loader: 'eslint-loader',
-          exclude: /(node_modules)/
-        })
-      }
-    }
+     ** You can extend webpack config here
+     */
+    extend(config, ctx) {}
   }
 }
