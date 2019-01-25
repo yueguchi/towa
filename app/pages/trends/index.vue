@@ -1,5 +1,8 @@
 <template>
   <v-app>
+    <toolbar
+      @handleClickClip="handleClickClip"
+    />
     <section class="trends-section">
       <div>
         <ul>
@@ -41,8 +44,16 @@
                       </v-card-title>
 
                       <v-card-actions>
-                        <v-btn color="info" @click="save(keyword.title.query)">クリップ</v-btn>
-                        <v-btn flat color="secondary">{{ keyword.formattedTraffic }}</v-btn>
+                        <v-btn
+                          class="clip-button"
+                          color="accent"
+                          @click="save(keyword.title.query)">クリップ</v-btn>
+                        <v-btn
+                          flat
+                          color="secondary">
+                          {{ keyword.formattedTraffic }}
+                          <v-icon>trending_up</v-icon>
+                        </v-btn>
                       </v-card-actions>
                     </v-card>
                   </v-flex>
@@ -58,8 +69,12 @@
 
 <script>
 import axios from 'axios'
+import Toolbar from '@/components/Toolbar'
 
 export default {
+  components: {
+    Toolbar
+  },
   async asyncData() {
     let trends = []
     try {
@@ -85,6 +100,16 @@ export default {
     },
     save(keyword) {
       alert(`${keyword}をsaveします`)
+      const trends = localStorage.getItem('trends')
+      localStorage.setItem('trends', trends ? trends + ',' + keyword : keyword)
+    },
+    handleClickClip() {
+      const trends = localStorage.getItem('trends')
+      if (!trends) alert('クリップは空っぽです')
+    },
+    isCliped(keyword) {
+      const trends = localStorage.getItem('trends')
+      return trends && trends.split(',').indexOf(keyword) > -1
     }
   }
 }
