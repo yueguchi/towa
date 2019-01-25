@@ -1,3 +1,4 @@
+const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 const { ENV } = require('./configs/env')
 
 const routerConfig = {
@@ -36,7 +37,14 @@ module.exports = {
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: 'towa' }
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
+    link: [
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      {
+        rel: 'stylesheet',
+        href:
+          'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons'
+      }
+    ]
   },
   /*
    ** Customize the progress bar color
@@ -45,12 +53,12 @@ module.exports = {
   /*
    ** Global CSS
    */
-  css: [],
+  css: ['~/assets/style/app.styl'],
 
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [],
+  plugins: ['@/plugins/vuetify'],
 
   /*
    ** Nuxt.js modules
@@ -82,6 +90,13 @@ module.exports = {
    ** Build configuration
    */
   build: {
+    transpile: ['vuetify/lib'],
+    plugins: [new VuetifyLoaderPlugin()],
+    loaders: {
+      stylus: {
+        import: ['~assets/style/variables.styl']
+      }
+    },
     /*
      ** You can extend webpack config here
      */
