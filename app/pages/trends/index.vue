@@ -59,18 +59,31 @@
         </li>
       </ul>
     </div>
-    <clip-button @emitClickButton="handleClickClipsButton"/>
+    <clip-button @emitClickButton="setShowClipModal()"/>
+    <clip-items
+      :isShow="showClipModal"
+      :items="clips"
+      @emitClickCloseButton="setShowClipModal()"
+      @clickItem="handleClickClipItem"/>
   </section>
 </template>
 
 <script>
+import ClipItems from '@/components/ClipItems'
 import ClipButton from '@/components/ClipButton'
 import { GET_TRENDS } from '@/libs/api'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   layout: 'towa',
   components: {
+    ClipItems,
     ClipButton
+  },
+  data() {
+    return {
+      clips: []
+    }
   },
   async asyncData() {
     let trends = []
@@ -88,7 +101,15 @@ export default {
       baseUrl: process.env.BASE_URL || ''
     }
   },
+  mounted() {
+    const trends = localStorage.getItem('trends')
+    this.clips = trends ? trends.split(',') : []
+  },
+  computed: {
+    ...mapState(['showClipModal'])
+  },
   methods: {
+    ...mapMutations(['setShowClipModal']),
     towa(keyword) {
       console.log('[client]baseUrl: ', this.baseUrl)
       location.href = `${this.baseUrl}/trends/candidates?keyword=${keyword}`
@@ -107,13 +128,12 @@ export default {
       localStorage.setItem('trends', clipedArr.join(','))
       alert(`${keyword}をUNCLIPしました`)
     },
-    handleClickClipsButton() {
-      const trends = localStorage.getItem('trends')
-      if (!trends) alert('クリップは空っぽです')
-    },
     isCliped(keyword) {
       const trends = localStorage.getItem('trends')
       return trends && trends.split(',').indexOf(keyword) > -1
+    },
+    handleClickClipItem(keyword) {
+      this.towa(keyword)
     }
   }
 }
