@@ -1,13 +1,17 @@
 <template>
   <v-app>
-    <toolbar />
+    <toolbar :title="title" />
     <nuxt />
   </v-app>
 </template>
 <script>
 import Toolbar from '@/components/Toolbar'
+import { mapState } from 'vuex'
 
 export default {
+  computed: {
+    ...mapState(['title'])
+  },
   components: {
     Toolbar
   }
